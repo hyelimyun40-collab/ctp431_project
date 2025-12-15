@@ -20,6 +20,8 @@ Physical keyboard keys (A–W–S–E–D–F–T–G–Y–H–U–J–K–O-L-
 Polyphonic audio playback
 Multiple notes can be played at the same time, enabling chord performance.
 
+An ADSR envelope was applied using a gain node to shape the attack, decay, sustain, and release of each sound, resulting in more natural and expressive piano playback.
+
 Sample-based sound engine
 Each note triggers a pre-recorded audio sample, preserving the original timbre.
 
