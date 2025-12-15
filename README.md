@@ -15,7 +15,7 @@ The instrument is designed as a sample-based polyphonic player, allowing multipl
 ✨ Features
 
 Keyboard-controlled piano interface
-Physical keyboard keys (A–W–S–E–D–F–T–G–Y–H–U–J–K–O) are mapped to musical notes.
+Physical keyboard keys (A–W–S–E–D–F–T–G–Y–H–U–J–K–O-L-P-:-") are mapped to musical notes.
 
 Polyphonic audio playback
 Multiple notes can be played at the same time, enabling chord performance.
