@@ -4,7 +4,7 @@
 
 
 
-##Interactive Piano Video Instrument
+##Interactive Piano Video Instrument##
 
 This project is a web-based interactive musical instrument that combines keyboard input, polyphonic audio playback, and synchronized video feedback.
 Users can play a piano-like interface using their physical keyboard, triggering corresponding audio samples and visual responses in real time.
