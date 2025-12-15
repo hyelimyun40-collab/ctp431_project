@@ -5,7 +5,7 @@ Created by compiling clips from actor Hwang Jung-min’s works.
 
 <br>
 
-![Bam Yang Gang reference](images/스크린샷 2025-12-15 오후 3.06.22.png)
+![Bam Yang Gang reference](images/스크린샷 2025-12-15 오후 3.06.22.png)
 
 ---
 
