@@ -5,7 +5,7 @@ Created by compiling clips from actor Hwang Jung-min’s works.
 
 <br>
 
-![Bam Yang Gang reference](images/스크린샷 2025-12-15 오후 3.06.22.png)
+![Bam Yang Gang reference](images/bamyanggang.png)
 
 ---
 
@@ -13,7 +13,7 @@ Created by compiling clips from actor Hwang Jung-min’s works.
 
 <br>
 
-![Baby speech piano](images/스크린샷 2025-12-15 오후 3.06.22.png)
+![Baby speech piano](images/pianoga.png)
 
 ---
 
@@ -21,4 +21,4 @@ Created by compiling clips from actor Hwang Jung-min’s works.
 
 <br>
 
-![Drama pitch reference](images/스크린샷 2025-12-15 오후 3.09.27.png)
+![Drama pitch reference](images/ukulele.png)
