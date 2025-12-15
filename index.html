@@ -197,144 +197,187 @@ video {
 </div>
 
 <script>
-/* =======================
-   ALL KEYS
-======================= */
-const ITEMS = [
-  // ---- PIANO ----
-  {note:"C4",key:"KeyA",label:"A",type:"white",audio:"assets/승헌쓰_1(C4).wav",video:"assets/승헌쓰_1(C4).mp4"},
-  {note:"C#4",key:"KeyW",label:"W",type:"black",audio:"assets/승헌쓰_2(C4s).wav",video:"assets/승헌쓰_2(C4s).mp4"},
-  {note:"D4",key:"KeyS",label:"S",type:"white",audio:"assets/승헌쓰_3(D4).wav",video:"assets/승헌쓰_3(D4).mp4"},
-  {note:"D#4",key:"KeyE",label:"E",type:"black",audio:"assets/승헌쓰_4(D4s).wav",video:"assets/승헌쓰_4(D4s).mp4"},
-  {note:"E4",key:"KeyD",label:"D",type:"white",audio:"assets/승헌쓰_5(E4).wav",video:"assets/승헌쓰_5(E4).mp4"},
-  {note:"F4",key:"KeyF",label:"F",type:"white",audio:"assets/승헌쓰_6(F4).wav",video:"assets/승헌쓰_6(F4).mp4"},
-  {note:"F#4",key:"KeyT",label:"T",type:"black",audio:"assets/승헌쓰_7(F4s).wav",video:"assets/승헌쓰_7(F4s).mp4"},
-  {note:"G4",key:"KeyG",label:"G",type:"white",audio:"assets/승헌쓰_8(G4).wav",video:"assets/승헌쓰_8(G4).mp4"},
-  {note:"G#4",key:"KeyY",label:"Y", type:"black",audio:"assets/승헌쓰_9(G4s).wav",video:"assets/승헌쓰_9(G4s).mp4"},
-  {note:"A4",key:"KeyH",label:"H",type:"white",audio:"assets/승헌쓰_10(A4).wav",video:"assets/승헌쓰_10(A4).mp4"},
-  {note:"A#4",key:"KeyU",label:"U",type:"black",audio:"assets/승헌쓰_11(A4s).wav",video:"assets/승헌쓰_11(A4s).mp4"},
-  {note:"B4",key:"KeyJ",label:"J",type:"white",audio:"assets/승헌쓰_12(B4).wav",video:"assets/승헌쓰_12(B4).mp4"},
-  {note:"C5",key:"KeyK",label:"K",type:"white",audio:"assets/승헌쓰_13(C5).wav",video:"assets/승헌쓰_13(C5).mp4"},
-  {note:"C#5",key:"KeyO",label:"O",type:"black",audio:"assets/승헌쓰_14(C5s).wav",video:"assets/승헌쓰_14(C5s).mp4"},
-  {note:"D5",key:"KeyL",label:"L",type:"white",audio:"assets/승헌쓰_15(D5).wav",video:"assets/승헌쓰_15(D5).mp4"},
-  {note:"D#5",key:"KeyP",label:"P",type:"black",audio:"assets/승헌쓰_16(D5s).wav",video:"assets/승헌쓰_16(D5s).mp4"},
-  {note:"E5",key:"Semicolon",label:":",type:"white",audio:"assets/승헌쓰_17(E5).wav",video:"assets/승헌쓰_17(E5).mp4"},
-  {note:"F5",key:"Quote",label:'"',type:"white",audio:"assets/승헌쓰_18(F5).wav",video:"assets/승헌쓰_18(F5).mp4"},
-
-  // ---- FX ----
-  {key:"KeyZ", label:"Z", fx:true, audio:"assets/shs_tonight.mp3", video:"assets/shs_tonight.mp4"},
-  {key:"KeyX", label:"X", fx:true, audio:"assets/shs_2234.mp3",   video:"assets/shs_2234.mp4"},
-  {key:"KeyC", label:"C", fx:true, audio:"assets/shs_huh.mp3",    video:"assets/shs_huh.mp4"},
-  {key:"KeyV", label:"V", fx:true, audio:"assets/shs_yes.mp3",    video:"assets/shs_yes.mp4"},
-  {key:"KeyB", label:"B", fx:true, audio:"assets/shs_wow.mp3",    video:"assets/shs_wow.mp4"},
-  {key:"KeyN", label:"N", fx:true, audio:"assets/shs_clap.mp3",   video:"assets/shs_clap.mp4"},
-  {key:"KeyM", label:"M", fx:true, audio:"assets/shs_thanks.mp3", video:"assets/shs_thanks.mp4"},
-];
-
-const vid = document.getElementById("vid");
-const stage = document.getElementById("stage");
-vid.muted = true;
-
-const audios = new Map();
-const byKey = new Map();
-let activeKeys = 0;
-
-/* ---------- UI ---------- */
-const keyboard = document.getElementById("keyboard");
-const fxBox = document.getElementById("fx");
-let whiteIndex = 0;
-
-for (const item of ITEMS) {
-  audios.set(item.key, new Audio(item.audio));
-
-  let el;
-  if (item.fx) {
-    el = document.createElement("div");
-    el.className = "fx-btn";
-    el.textContent = item.label;
-    fxBox.appendChild(el);
-  } else {
-    el = document.createElement("div");
-    el.className = `key ${item.type}`;
-    el.style.left =
-      item.type === "white"
-        ? `${whiteIndex++ * 60}px`
-        : `${whiteIndex * 60 - 20}px`;
-
-    const label = document.createElement("div");
-    label.className = "key-label";
-    label.textContent = item.label;
-    el.appendChild(label);
-
-    keyboard.appendChild(el);
+  /* =======================
+     ADSR
+  ======================= */
+  const ADSR = {
+    attack: 0.03,
+    decay: 0.08,
+    sustain: 0.7,
+    release: 0.18
+  };
+  
+  /* =======================
+     AUDIO CONTEXT
+  ======================= */
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  const ctx = new AudioCtx();
+  
+  /* =======================
+     ALL KEYS
+  ======================= */
+  const ITEMS = [
+    {note:"C4",key:"KeyA",label:"A",type:"white",audio:"assets/승헌쓰_1(C4).wav",video:"assets/승헌쓰_1(C4).mp4"},
+    {note:"C#4",key:"KeyW",label:"W",type:"black",audio:"assets/승헌쓰_2(C4s).wav",video:"assets/승헌쓰_2(C4s).mp4"},
+    {note:"D4",key:"KeyS",label:"S",type:"white",audio:"assets/승헌쓰_3(D4).wav",video:"assets/승헌쓰_3(D4).mp4"},
+    {note:"D#4",key:"KeyE",label:"E",type:"black",audio:"assets/승헌쓰_4(D4s).wav",video:"assets/승헌쓰_4(D4s).mp4"},
+    {note:"E4",key:"KeyD",label:"D",type:"white",audio:"assets/승헌쓰_5(E4).wav",video:"assets/승헌쓰_5(E4).mp4"},
+    {note:"F4",key:"KeyF",label:"F",type:"white",audio:"assets/승헌쓰_6(F4).wav",video:"assets/승헌쓰_6(F4).mp4"},
+    {note:"F#4",key:"KeyT",label:"T",type:"black",audio:"assets/승헌쓰_7(F4s).wav",video:"assets/승헌쓰_7(F4s).mp4"},
+    {note:"G4",key:"KeyG",label:"G",type:"white",audio:"assets/승헌쓰_8(G4).wav",video:"assets/승헌쓰_8(G4).mp4"},
+    {note:"G#4",key:"KeyY",label:"Y",type:"black",audio:"assets/승헌쓰_9(G4s).wav",video:"assets/승헌쓰_9(G4s).mp4"},
+    {note:"A4",key:"KeyH",label:"H",type:"white",audio:"assets/승헌쓰_10(A4).wav",video:"assets/승헌쓰_10(A4).mp4"},
+    {note:"A#4",key:"KeyU",label:"U",type:"black",audio:"assets/승헌쓰_11(A4s).wav",video:"assets/승헌쓰_11(A4s).mp4"},
+    {note:"B4",key:"KeyJ",label:"J",type:"white",audio:"assets/승헌쓰_12(B4).wav",video:"assets/승헌쓰_12(B4).mp4"},
+    {note:"C5",key:"KeyK",label:"K",type:"white",audio:"assets/승헌쓰_13(C5).wav",video:"assets/승헌쓰_13(C5).mp4"},
+    {note:"C#5",key:"KeyO",label:"O",type:"black",audio:"assets/승헌쓰_14(C5s).wav",video:"assets/승헌쓰_14(C5s).mp4"},
+    {note:"D5",key:"KeyL",label:"L",type:"white",audio:"assets/승헌쓰_15(D5).wav",video:"assets/승헌쓰_15(D5).mp4"},
+    {note:"D#5",key:"KeyP",label:"P",type:"black",audio:"assets/승헌쓰_16(D5s).wav",video:"assets/승헌쓰_16(D5s).mp4"},
+    {note:"E5",key:"Semicolon",label:":",type:"white",audio:"assets/승헌쓰_17(E5).wav",video:"assets/승헌쓰_17(E5).mp4"},
+    {note:"F5",key:"Quote",label:'"',type:"white",audio:"assets/승헌쓰_18(F5).wav",video:"assets/승헌쓰_18(F5).mp4"},
+  
+    {key:"KeyZ", label:"Z", fx:true, audio:"assets/shs_tonight.mp3", video:"assets/shs_tonight.mp4"},
+    {key:"KeyX", label:"X", fx:true, audio:"assets/shs_2234.mp3",   video:"assets/shs_2234.mp4"},
+    {key:"KeyC", label:"C", fx:true, audio:"assets/shs_huh.mp3",    video:"assets/shs_huh.mp4"},
+    {key:"KeyV", label:"V", fx:true, audio:"assets/shs_yes.mp3",    video:"assets/shs_yes.mp4"},
+    {key:"KeyB", label:"B", fx:true, audio:"assets/shs_wow.mp3",    video:"assets/shs_wow.mp4"},
+    {key:"KeyN", label:"N", fx:true, audio:"assets/shs_clap.mp3",   video:"assets/shs_clap.mp4"},
+    {key:"KeyM", label:"M", fx:true, audio:"assets/shs_thanks.mp3", video:"assets/shs_thanks.mp4"},
+  ];
+  
+  const vid = document.getElementById("vid");
+  const stage = document.getElementById("stage");
+  vid.muted = true;
+  
+  /* =======================
+     AUDIO SETUP (with Gain)
+  ======================= */
+  const audios = new Map();
+  const gains  = new Map();
+  const byKey  = new Map();
+  let activeKeys = 0;
+  
+  const keyboard = document.getElementById("keyboard");
+  const fxBox = document.getElementById("fx");
+  let whiteIndex = 0;
+  
+  for (const item of ITEMS) {
+    const audio = new Audio(item.audio);
+    audio.loop = false;
+  
+    const source = ctx.createMediaElementSource(audio);
+    const gain = ctx.createGain();
+    gain.gain.value = 0;
+  
+    source.connect(gain).connect(ctx.destination);
+  
+    audios.set(item.key, audio);
+    gains.set(item.key, gain);
+  
+    let el;
+    if (item.fx) {
+      el = document.createElement("div");
+      el.className = "fx-btn";
+      el.textContent = item.label;
+      fxBox.appendChild(el);
+    } else {
+      el = document.createElement("div");
+      el.className = `key ${item.type}`;
+      el.style.left =
+        item.type === "white"
+          ? `${whiteIndex++ * 60}px`
+          : `${whiteIndex * 60 - 20}px`;
+  
+      const label = document.createElement("div");
+      label.className = "key-label";
+      label.textContent = item.label;
+      el.appendChild(label);
+      keyboard.appendChild(el);
+    }
+  
+    byKey.set(item.key, { data:item, el });
   }
-
-  byKey.set(item.key, {data:item, el});
-}
-
-/* ---------- PLAY / STOP ---------- */
-function play(obj, el) {
-  const a = audios.get(obj.key);
-  if (a.paused) {
-    a.currentTime = 0;
-    a.play().catch(()=>{});
-    activeKeys++;
+  
+  /* =======================
+     PLAY / STOP with ADSR
+  ======================= */
+  function play(obj, el) {
+    const audio = audios.get(obj.key);
+    const gain  = gains.get(obj.key);
+    const now = ctx.currentTime;
+  
+    if (audio.paused) {
+      audio.currentTime = 0;
+      audio.play().catch(()=>{});
+      activeKeys++;
+    }
+  
+    gain.gain.cancelScheduledValues(now);
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(1, now + ADSR.attack);
+    gain.gain.linearRampToValueAtTime(
+      ADSR.sustain,
+      now + ADSR.attack + ADSR.decay
+    );
+  
+    stage.classList.add("playing");
+    if (vid.src !== obj.video) {
+      vid.src = obj.video;
+      vid.load();
+    }
+    vid.currentTime = 0.001;
+    vid.play().catch(()=>{});
+  
+    el.classList.add("active");
   }
-
-  stage.classList.add("playing");
-  if (vid.src !== obj.video) {
-    vid.src = obj.video;
-    vid.load();
+  
+  function stop(obj, el) {
+    const audio = audios.get(obj.key);
+    const gain  = gains.get(obj.key);
+    const now = ctx.currentTime;
+  
+    gain.gain.cancelScheduledValues(now);
+    gain.gain.setValueAtTime(gain.gain.value, now);
+    gain.gain.linearRampToValueAtTime(0, now + ADSR.release);
+  
+    setTimeout(() => {
+      audio.pause();
+      audio.currentTime = 0;
+    }, ADSR.release * 1000);
+  
+    activeKeys = Math.max(0, activeKeys - 1);
+    if (activeKeys === 0) {
+      vid.pause();
+      vid.currentTime = 0;
+      stage.classList.remove("playing");
+    }
+  
+    el.classList.remove("active");
   }
-  vid.currentTime = 0.001;
-  vid.play().catch(()=>{});
-
-  el.classList.add("active");
-}
-
-function stop(obj, el) {
-  const a = audios.get(obj.key);
-  a.pause();
-  a.currentTime = 0;
-
-  activeKeys = Math.max(0, activeKeys - 1);
-  if (activeKeys === 0) {
-    vid.pause();
-    vid.currentTime = 0;
-    stage.classList.remove("playing");
+  
+  /* =======================
+     AUDIO UNLOCK
+  ======================= */
+  function unlockAudio() {
+    if (ctx.state !== "running") ctx.resume();
   }
-
-  el.classList.remove("active");
-}
-
-/* ---------- AUDIO UNLOCK ---------- */
-let unlocked = false;
-function unlockAudio() {
-  if (unlocked) return;
-  audios.forEach(a => {
-    a.volume = 0;
-    a.play().then(() => {
-      a.pause();
-      a.currentTime = 0;
-      a.volume = 1;
-    }).catch(()=>{});
+  window.addEventListener("pointerdown", unlockAudio, { once:true });
+  window.addEventListener("keydown", unlockAudio, { once:true });
+  
+  /* =======================
+     KEY EVENTS
+  ======================= */
+  window.addEventListener("keydown", e => {
+    if (e.repeat) return;
+    const item = byKey.get(e.code);
+    if (item) play(item.data, item.el);
   });
-  unlocked = true;
-}
-window.addEventListener("pointerdown", unlockAudio, { once:true });
-window.addEventListener("keydown", unlockAudio, { once:true });
-
-/* ---------- KEY EVENTS ---------- */
-window.addEventListener("keydown", e => {
-  if (e.repeat) return;
-  const item = byKey.get(e.code);
-  if (item) play(item.data, item.el);
-});
-
-window.addEventListener("keyup", e => {
-  const item = byKey.get(e.code);
-  if (item) stop(item.data, item.el);
-});
-</script>
+  
+  window.addEventListener("keyup", e => {
+    const item = byKey.get(e.code);
+    if (item) stop(item.data, item.el);
+  });
+  </script>
+  
 </body>
 </html>
