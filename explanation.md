@@ -1,8 +1,7 @@
 ## References
 
 ### 1. Music video of *“Bam Yang Gang”*
-Created by compiling clips from actor Hwang Jung-min’s works.
-
+-Music video of “Bam Yang Gang” song created by compiling clips from actor Hwang Jung-min’s works
 <br>
 
 ![Bam Yang Gang reference](images/bamyanggang.png)
@@ -10,7 +9,7 @@ Created by compiling clips from actor Hwang Jung-min’s works.
 ---
 
 ### 2. Piano accompaniment following baby’s speech
-
+-Videos where piano makes accompaniment about baby's speech
 <br>
 
 ![Baby speech piano](images/pianoga.png)
@@ -18,7 +17,7 @@ Created by compiling clips from actor Hwang Jung-min’s works.
 ---
 
 ### 3. Musical instruments mimicking the pitch of drama dialogue
-
+-Videos where musical instruments mimic the pitch of drama dialogue.
 <br>
 
 ![Drama pitch reference](images/ukulele.png)
