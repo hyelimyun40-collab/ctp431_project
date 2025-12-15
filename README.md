@@ -1,5 +1,4 @@
 # ctp431_project
-speech_pitch_estimation
 
 🔗 Live Demo: https://hyelimyun40-collab.github.io/ctp431_project/
 
