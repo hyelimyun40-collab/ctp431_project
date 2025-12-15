@@ -12,7 +12,7 @@ Users can play a piano-like interface using their physical keyboard, triggering 
 The instrument is designed as a sample-based polyphonic player, allowing multiple notes (chords) to be played simultaneously while displaying a single representative video for visual clarity.
 
 
-✨ Features
+**Features**
 
 Keyboard-controlled piano interface
 Physical keyboard keys (A–W–S–E–D–F–T–G–Y–H–U–J–K–O-L-P-:-") are mapped to musical notes.
@@ -35,7 +35,7 @@ Browser-based execution
 Runs entirely in the web browser without any additional software installation.
 
 
-🚀 How to Use
+**How to Use**
 
 Open the project URL in a modern web browser (Chrome recommended).
 
